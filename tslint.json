@@ -9,7 +9,8 @@
     "prefer-for-of": false,
     "variable-name": {
       "options": [
-        "allow-snake-case"
+        "allow-snake-case",
+        "allow-pascal-case"
       ]
     }
   }
