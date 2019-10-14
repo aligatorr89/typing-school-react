@@ -1,0 +1,16 @@
+{
+  "extends": ["tslint:latest", "tslint-react"],
+  "rules": {
+    // override tslint-react rules here
+    "jsx-wrap-multiline": false,
+    "quotemark": [true, "single"],
+    "object-literal-sort-keys": false,
+    "trailing-comma": [false],
+    "prefer-for-of": false,
+    "variable-name": {
+      "options": [
+        "allow-snake-case"
+      ]
+    }
+  }
+}
