@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { WordsText } from './words-text';
 
 interface IProps {
   textChunk: string[];
@@ -11,21 +12,10 @@ interface IState {
   timer: number;
 }
 
-interface IInputTextProps {
-  onKeyDown(event: KeyboardEvent): void;
-  onKeyUp(event: React.KeyboardEvent<HTMLInputElement>): void;
-}
+export class TypingTestComponent extends React.Component<IProps, IState> {
+  protected timerIntervalId: number;
+  protected userInput: React.RefObject<HTMLInputElement>;
 
-const inputText: React.SFC<IInputTextProps> = (props) => {
-  return (
-    <input onKeyUp={props.onKeyUp} />
-  );
-};
-
-export class TypingTest extends React.Component<IProps, IState> {
-  private timerIntervalId: number;
-  // private userInput: React.RefObject<HTMLInputElement>;// HTMLInputElement;//
-  private userInput: React.RefObject<HTMLInputElement>;
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -94,6 +84,7 @@ export class TypingTest extends React.Component<IProps, IState> {
   public render() {
     return (
       <div>
+        <WordsText textChunk={this.props.textChunk} />
         <input id='typing' ref={this.userInput} onKeyUp={this.onKeyUp} />
         <span id='timer'>{this.state.timer}</span>
       </div>
