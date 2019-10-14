@@ -1,32 +1,32 @@
 import * as React from 'react';
 
-interface Props {
-  textChunk: string[]
+interface IProps {
+  textChunk: string[];
 }
 
-interface State {
+interface IState {
   wordCount: number;
   startTime: number;
   currentWordTimeCounter: number;
-  timer: number
+  timer: number;
 }
 
-interface InputTextProps {
+interface IInputTextProps {
   onKeyDown(event: KeyboardEvent): void;
   onKeyUp(event: React.KeyboardEvent<HTMLInputElement>): void;
 }
 
-const inputText: React.SFC<InputTextProps> = (props) => {
+const inputText: React.SFC<IInputTextProps> = (props) => {
   return (
     <input onKeyUp={props.onKeyUp} />
   );
 };
 
-export class TypingTest extends React.Component<Props, State> {
-  private timerIntervalId: number = NaN;
+export class TypingTest extends React.Component<IProps, IState> {
+  private timerIntervalId: number;
   // private userInput: React.RefObject<HTMLInputElement>;// HTMLInputElement;//
   private userInput: React.RefObject<HTMLInputElement>;
-  constructor(props: Props) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       wordCount: 0,
@@ -39,12 +39,12 @@ export class TypingTest extends React.Component<Props, State> {
     this.userInput = React.createRef();
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.userInput.current.addEventListener('keydown', this.onKeyDown);
     this.userInput.current.focus();
   }
 
-  start(): void {
+  public start(): void {
     this.setState({
       startTime: Date.now(),
       currentWordTimeCounter: this.state.startTime
@@ -53,7 +53,7 @@ export class TypingTest extends React.Component<Props, State> {
     this.userInput.current.removeEventListener('keydown', this.onKeyDown);
   }
 
-  end(): void {
+  public end(): void {
     this.setState({
       startTime: 0,
       wordCount: 0,
@@ -65,23 +65,21 @@ export class TypingTest extends React.Component<Props, State> {
   }
 
   // React.SyntheticEvent<HTMLInputElement>React.KeyboardEvent<HTMLInputElement>
-  onKeyDown(event: KeyboardEvent): void {
-    if(event.keyCode !== 27) {
+  public onKeyDown(event: KeyboardEvent): void {
+    if (event.keyCode !== 27) {
       this.start();
     }
   }
 
-  onKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
-    if(event.keyCode === 32) {
-
+  public onKeyUp(event: React.KeyboardEvent<HTMLInputElement>): void {
+    if (event.keyCode === 32) {
       this.userInput.current.value = '';
-    }
-    else if(event.keyCode === 27) {
+    } else if (event.keyCode === 27) {
       this.end();
     }
   }
 
-  timeIntervalStart(): void {
+  public timeIntervalStart(): void {
     this.timerIntervalId = setInterval(() => {
       this.setState({
         timer: this.state.timer + 1
@@ -89,15 +87,15 @@ export class TypingTest extends React.Component<Props, State> {
     }, 1000);
   }
 
-  timeIntervalEnd(): void {
+  public timeIntervalEnd(): void {
     clearInterval(this.timerIntervalId);
   }
 
-  render() {
+  public render() {
     return (
       <div>
-        <input ref={this.userInput} onKeyUp={this.onKeyUp} />
-        <span>{this.state.timer}</span>
+        <input id='typing' ref={this.userInput} onKeyUp={this.onKeyUp} />
+        <span id='timer'>{this.state.timer}</span>
       </div>
     );
   }

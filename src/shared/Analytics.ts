@@ -1,3 +1,5 @@
+import { AnalyticsResult } from './AnalyticsResult';
+
 export interface IAnalytics {
   data: IAnalyticsData[];
   prevChunkStart: number;
@@ -6,55 +8,16 @@ export interface IAnalytics {
 }
 
 export interface IAnalyticsData {
-  textId?: number,
+  textId?: number;
   word: string;
   correctWord: string;
   timeNeeded: number;
 }
 
-export interface IAnalyticsResult {
-  textId: number,
-  words: number;
-  timeNeeded: number;
-  mistakes: number;
-  failedWords: IAnalyticsResultFailedWords[];
-  correctWordCharacters: number;
-  allWordCharacters: number;
-  wpm: number;
-  wpm_standard: number;
-}
-export class AnalyticsResult implements IAnalyticsResult {
-  textId: number;
-  words: number;
-  timeNeeded: number;
-  mistakes: number;
-  failedWords: IAnalyticsResultFailedWords[];
-  correctWordCharacters: number;
-  allWordCharacters: number;
-  wpm: number;
-  wpm_standard: number;
-  constructor() {
-    this.textId = 0,
-    this.words = 0;
-    this.timeNeeded = 0;
-    this.mistakes = 0;
-    this.failedWords = [];
-    this.correctWordCharacters = 0;
-    this.allWordCharacters = 0;
-    this.wpm = 0;
-    this.wpm_standard = 0;
-  }
-}
-
-export type IAnalyticsResultFailedWords = {
-  correct: string,
-  actual: string
-};
-
 export class Analytics implements IAnalytics {
-  data: IAnalyticsData[];
-  prevChunkEnd: number;
-  prevChunkStart: number;
+  public data: IAnalyticsData[];
+  public prevChunkEnd: number;
+  public prevChunkStart: number;
 
   constructor() {
     this.data = [];
@@ -63,37 +26,36 @@ export class Analytics implements IAnalytics {
     // this.dbConnection = new indexedDb();
   }
 
-  insert(word: string, correctWord: string, timeNeeded: number): void {
+  public insert(word: string, correctWord: string, timeNeeded: number): void {
     word = word.replace(' ', '');
     this.data.push({
       word, correctWord, timeNeeded
     });
   }
 
-  analyzePrevious() {
+  public analyzePrevious() {
     this.prevChunkEnd = this.data.length;
     const previous = this.data.slice(this.prevChunkStart, this.prevChunkEnd);
     return this.analyze(previous);
   }
 
-  analyzeAll() {
+  public analyzeAll() {
     return this.analyze(this.data);
   }
 
   private analyze(dataChunk: IAnalyticsData[]) {
     const result = new AnalyticsResult();
-    for(let i = 0; i < dataChunk.length; i++) {
+    for (let i = 0; i < dataChunk.length; i++) {
       const current = dataChunk[i];
       result.words += 1;
       result.timeNeeded += current.timeNeeded ? current.timeNeeded : 0;
-      if(current.word !== current.correctWord && current.word) {
+      if (current.word !== current.correctWord && current.word) {
         result.failedWords.push({
           correct: current.correctWord,
           actual: current.word
         });
         result.mistakes += 1;
-      }
-      else {
+      } else {
         result.correctWordCharacters += current.word.length + 1;
       }
       result.allWordCharacters += current.word.length + 1;
