@@ -76,7 +76,11 @@ export class Analytics implements IAnalytics {
     return this.analyze(previous);
   }
 
-  analyze(dataChunk: IAnalyticsData[]) {
+  analyzeAll() {
+    return this.analyze(this.data);
+  }
+
+  private analyze(dataChunk: IAnalyticsData[]) {
     const result = new AnalyticsResult();
     for(let i = 0; i < dataChunk.length; i++) {
       const current = dataChunk[i];
