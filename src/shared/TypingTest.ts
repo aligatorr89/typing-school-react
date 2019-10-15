@@ -7,9 +7,9 @@ export interface ITypingTest {
 
 export class TypingTest {
   protected wordCount: number;
-  private text: string[];
   protected startTime: number;
   protected currentWordTimeCounter: number;
+  private text: string[];
 
   constructor(textChunk: string[]) {
     this.wordCount = 0;
@@ -21,7 +21,7 @@ export class TypingTest {
   }
 
   public pause() {
-    console.log('pausing...');
+    // console.log('pausing...');
   }
 
   public setStartTime() {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { WordsText } from './words-text';
+// import { TypingTest } from '../shared/TypingTest';
 
 interface IProps {
   textChunk: string[];
@@ -15,7 +16,7 @@ interface IState {
 export class TypingTestComponent extends React.Component<IProps, IState> {
   protected timerIntervalId: number;
   protected userInput: React.RefObject<HTMLInputElement>;
-
+  private allStates: IState[] = [];
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -36,14 +37,15 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
 
   public start(): void {
     this.setState({
-      startTime: Date.now(),
-      currentWordTimeCounter: this.state.startTime
+      startTime: Date.now()
     });
     this.timeIntervalStart();
     this.userInput.current.removeEventListener('keydown', this.onKeyDown);
+    this.allStates.push(this.state);
   }
 
   public end(): void {
+    // console.log(this.allStates);
     this.setState({
       startTime: 0,
       wordCount: 0,
@@ -55,21 +57,32 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   }
 
   // React.SyntheticEvent<HTMLInputElement>React.KeyboardEvent<HTMLInputElement>
-  public onKeyDown(event: KeyboardEvent): void {
+  public onKeyDown(event: KeyboardEvent) {
     if (event.keyCode !== 27) {
       this.start();
     }
   }
 
-  public onKeyUp(event: React.KeyboardEvent<HTMLInputElement>): void {
+  public onKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.keyCode === 32) {
-      this.userInput.current.value = '';
+      this.nextWord();
     } else if (event.keyCode === 27) {
       this.end();
     }
   }
 
-  public timeIntervalStart(): void {
+  public nextWord() {
+    this.userInput.current.value = '';
+    const newDate = Date.now();
+    this.setState({
+      wordCount: this.state.wordCount + 1,
+      startTime: newDate,
+      currentWordTimeCounter: newDate - this.state.startTime
+    });
+    this.allStates.push(this.state);
+  }
+
+  public timeIntervalStart() {
     this.timerIntervalId = setInterval(() => {
       this.setState({
         timer: this.state.timer + 1
@@ -77,14 +90,14 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
     }, 1000);
   }
 
-  public timeIntervalEnd(): void {
+  public timeIntervalEnd() {
     clearInterval(this.timerIntervalId);
   }
 
   public render() {
     return (
       <div>
-        <WordsText textChunk={this.props.textChunk} />
+        <WordsText textChunk={this.props.textChunk} currentWordIndex={this.state.wordCount} />
         <input id='typing' ref={this.userInput} onKeyUp={this.onKeyUp} />
         <span id='timer'>{this.state.timer}</span>
       </div>
