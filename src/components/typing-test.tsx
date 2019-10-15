@@ -16,7 +16,6 @@ interface IState {
 export class TypingTestComponent extends React.Component<IProps, IState> {
   protected timerIntervalId: number;
   protected userInput: React.RefObject<HTMLInputElement>;
-  private allStates: IState[] = [];
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -41,7 +40,6 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
     });
     this.timeIntervalStart();
     this.userInput.current.removeEventListener('keydown', this.onKeyDown);
-    this.allStates.push(this.state);
   }
 
   public end(): void {
@@ -79,7 +77,6 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
       startTime: newDate,
       currentWordTimeCounter: newDate - this.state.startTime
     });
-    this.allStates.push(this.state);
   }
 
   public timeIntervalStart() {
