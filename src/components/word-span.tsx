@@ -12,9 +12,9 @@ export class Word extends React.Component<IWordProps> {
     if (nextProps.currentWordIndex === 0) {
       return true;
     }
-    if (nextProps.currentWordIndex === this.props.index || nextProps.currentWordIndex - 1 === this.props.index) {
-      return true;
-    }
+    // if (nextProps.currentWordIndex === this.props.index || nextProps.currentWordIndex - 1 === this.props.index) {
+    //   return true;
+    // }
     return false;
   }
 

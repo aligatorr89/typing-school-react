@@ -11,15 +11,11 @@ interface IProps {
 export class WordsText extends React.Component<IProps> {
   public element: React.RefObject<HTMLDivElement> = React.createRef();
   public shouldComponentUpdate(nextProps: IProps) {
-    if (nextProps.currentWordIndex !== this.props.currentWordIndex) {
-      return true;
+    if (nextProps.currentWordIndex !== 0) {
+      return false;
     }
 
-    if (nextProps.textChunkId !== this.props.textChunkId) {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   public render() {

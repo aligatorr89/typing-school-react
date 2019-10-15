@@ -22,7 +22,7 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      wordCount: NaN,
+      wordCount: 0,
       startTime: 0,
       currentWordTimeCounter: 0,
       timer: 0
@@ -48,8 +48,7 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   public start(): void {
     this.wordsText.current.element.current.children[0].children[0].setAttribute('class', 'word current');
     this.setState({
-      startTime: Date.now(),
-      wordCount: 0
+      startTime: Date.now()
     });
     this.timeIntervalStart();
     this.userInput.current.removeEventListener('keydown', this.onKeyDown);
