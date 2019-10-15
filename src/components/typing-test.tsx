@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { WordsText } from './words-text';
+import { WordsText } from './words-text';
 // import { TypingTest } from '../shared/TypingTest';
 
 interface IProps {
@@ -18,7 +18,7 @@ interface IState {
 export class TypingTestComponent extends React.Component<IProps, IState> {
   protected timerIntervalId: number;
   protected userInput: React.RefObject<HTMLInputElement>;
-
+  protected wordsText: React.RefObject<WordsText>;
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -30,6 +30,7 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.userInput = React.createRef();
+    this.wordsText = React.createRef();
   }
 
   public componentDidMount() {
@@ -37,7 +38,15 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
     this.userInput.current.focus();
   }
 
+  public shouldComponentUpdate(nextProps: IProps) {
+    if (nextProps.textChunkId !== this.props.textChunkId) {
+      return true;
+    }
+    return false;
+  }
+
   public start(): void {
+    this.wordsText.current.element.current.children[0].children[0].setAttribute('class', 'word current');
     this.setState({
       startTime: Date.now(),
       wordCount: 0
@@ -47,6 +56,9 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   }
 
   public end(): void {
+    for (let i = 0; i < this.state.wordCount; i++) {
+      this.wordsText.current.element.current.children[i].children[0].setAttribute('class', 'word');
+    }
     this.setState({
       startTime: 0,
       wordCount: 0,
@@ -55,6 +67,7 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
     });
     this.timeIntervalEnd();
     this.props.getTextChunk();
+
     this.userInput.current.addEventListener('keydown', this.onKeyDown);
     this.userInput.current.value = '';
   }
@@ -82,6 +95,9 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
       startTime: newDate,
       currentWordTimeCounter: newDate - this.state.startTime
     });
+
+    this.wordsText.current.element.current.children[this.state.wordCount].children[0].setAttribute('class', 'word done');
+    this.wordsText.current.element.current.children[this.state.wordCount + 1].children[0].setAttribute('class', 'word current');
   }
 
   public timeIntervalStart() {
@@ -99,7 +115,8 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   public render() {
     return (
       <div>
-        <WordsTextSFC
+        <WordsText
+          ref={this.wordsText}
           textChunk={this.props.textChunk}
           textChunkId={this.props.textChunkId}
           currentWordIndex={this.state.wordCount}
@@ -115,6 +132,7 @@ interface IWordsTextProps {
   textChunk: string[];
   textChunkId: number;
   currentWordIndex: number;
+  ref: React.RefObject<HTMLInputElement>;
 }
 
 export const WordsTextSFC: React.SFC<IWordsTextProps> = (props) => {
@@ -123,7 +141,7 @@ export const WordsTextSFC: React.SFC<IWordsTextProps> = (props) => {
       {props.textChunk && renderWords(props)}
     </div>
   );
-}
+};
 
 function renderWords(props: IWordsTextProps) {
   return (
@@ -143,13 +161,13 @@ interface IWordProps {
 export const WordSFC: React.SFC<IWordProps> = (props) => {
   return (
     <span>
-      <span className={'word' + addClassName(props.index, props.currentWordIndex)}>
+      <span className={'word'}>
         {props.word}{'\u00a0'}
       </span>
       {' '}
     </span>
   );
-}
+};
 
 function addClassName(index: number, current: number) {
   if (index < current) {

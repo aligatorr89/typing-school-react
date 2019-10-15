@@ -21,7 +21,7 @@ export class Word extends React.Component<IWordProps> {
   public render() {
     return (
       <span>
-        <span className={'word' + addClassName(this.props.index, this.props.currentWordIndex)}>
+        <span className='word'>
           {this.props.word}{'\u00a0'}
         </span>
         {' '}
