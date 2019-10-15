@@ -12,6 +12,7 @@
         "allow-snake-case",
         "allow-pascal-case"
       ]
-    }
+    },
+    "no-console": [false, "log", "error"]
   }
 }
