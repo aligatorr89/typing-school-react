@@ -4,6 +4,8 @@ import { WordsText } from './words-text';
 
 interface IProps {
   textChunk: string[];
+  textChunkId: number;
+  getTextChunk: Function;
 }
 
 interface IState {
@@ -16,10 +18,11 @@ interface IState {
 export class TypingTestComponent extends React.Component<IProps, IState> {
   protected timerIntervalId: number;
   protected userInput: React.RefObject<HTMLInputElement>;
+
   constructor(props: IProps) {
     super(props);
     this.state = {
-      wordCount: 0,
+      wordCount: NaN,
       startTime: 0,
       currentWordTimeCounter: 0,
       timer: 0
@@ -36,7 +39,8 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
 
   public start(): void {
     this.setState({
-      startTime: Date.now()
+      startTime: Date.now(),
+      wordCount: 0
     });
     this.timeIntervalStart();
     this.userInput.current.removeEventListener('keydown', this.onKeyDown);
@@ -94,7 +98,7 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   public render() {
     return (
       <div>
-        <WordsText textChunk={this.props.textChunk} currentWordIndex={this.state.wordCount} />
+        <WordsText textChunk={this.props.textChunk} textChunkId={this.props.textChunkId} currentWordIndex={this.state.wordCount} />
         <input id='typing' ref={this.userInput} onKeyUp={this.onKeyUp} />
         <span id='timer'>{this.state.timer}</span>
       </div>
