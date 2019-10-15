@@ -4,6 +4,7 @@ import { WordsText } from './words-text';
 
 interface IProps {
   textChunk: string[];
+  textChunkId: number;
 }
 
 interface IState {
@@ -45,7 +46,6 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   }
 
   public end(): void {
-    // console.log(this.allStates);
     this.setState({
       startTime: 0,
       wordCount: 0,
@@ -56,7 +56,6 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
     this.userInput.current.addEventListener('keydown', this.onKeyDown);
   }
 
-  // React.SyntheticEvent<HTMLInputElement>React.KeyboardEvent<HTMLInputElement>
   public onKeyDown(event: KeyboardEvent) {
     if (event.keyCode !== 27) {
       this.start();
@@ -97,7 +96,11 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   public render() {
     return (
       <div>
-        <WordsText textChunk={this.props.textChunk} currentWordIndex={this.state.wordCount} />
+        <WordsText
+          textChunk={this.props.textChunk}
+          textChunkId={this.props.textChunkId}
+          currentWordIndex={this.state.wordCount}
+        />
         <input id='typing' ref={this.userInput} onKeyUp={this.onKeyUp} />
         <span id='timer'>{this.state.timer}</span>
       </div>

@@ -6,6 +6,7 @@ import { getTypingTests } from './shared/Api';
 
 interface IState {
   textChunk: string[];
+  textChunkId: number;
 }
 
 class App extends React.Component<{}, IState> {
@@ -14,7 +15,8 @@ class App extends React.Component<{}, IState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      textChunk: []
+      textChunk: [],
+      textChunkId: -1
     };
     getTypingTests()
     .then((res) => {
@@ -27,7 +29,7 @@ class App extends React.Component<{}, IState> {
   public render() {
     return (
       <div className='App'>
-        <TypingTestComponent textChunk={this.state.textChunk} />
+        <TypingTestComponent textChunk={this.state.textChunk} textChunkId={this.state.textChunkId} />
       </div>
     );
   }
@@ -35,7 +37,8 @@ class App extends React.Component<{}, IState> {
   private setNewTextChunk() {
     this.currentChunkIndex = Math.round(Math.random() * 1000);
     this.setState({
-      textChunk: this.typingTests[this.currentChunkIndex].split('|')
+      textChunk: this.typingTests[this.currentChunkIndex].split('|'),
+      textChunkId: this.currentChunkIndex
     });
   }
 }
