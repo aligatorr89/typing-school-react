@@ -24,12 +24,17 @@ class App extends React.Component<{}, IState> {
       this.setNewTextChunk();
     })
     .catch((error) => alert(error));
+    this.setNewTextChunk = this.setNewTextChunk.bind(this);
   }
 
   public render() {
     return (
       <div className='App'>
-        <TypingTestComponent textChunk={this.state.textChunk} textChunkId={this.state.textChunkId} getTextChunk={this.setNewTextChunk} />
+        <TypingTestComponent
+          textChunk={this.state.textChunk}
+          textChunkId={this.state.textChunkId}
+          getTextChunk={this.setNewTextChunk}
+        />
       </div>
     );
   }

@@ -8,9 +8,6 @@ interface IProps {
 }
 
 export class WordsText extends React.Component<IProps> {
-  constructor(props: IProps) {
-    super(props);
-  }
 
   public shouldComponentUpdate(nextProps: IProps) {
     if (nextProps.currentWordIndex !== this.props.currentWordIndex) {

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { WordsText } from './words-text';
+// import { WordsText } from './words-text';
 // import { TypingTest } from '../shared/TypingTest';
 
 interface IProps {
   textChunk: string[];
   textChunkId: number;
-  getTextChunk: Function;
+  getTextChunk: () => void;
 }
 
 interface IState {
@@ -47,7 +47,6 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   }
 
   public end(): void {
-    // console.log(this.allStates);
     this.setState({
       startTime: 0,
       wordCount: 0,
@@ -55,7 +54,9 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
       timer: 0
     });
     this.timeIntervalEnd();
+    this.props.getTextChunk();
     this.userInput.current.addEventListener('keydown', this.onKeyDown);
+    this.userInput.current.value = '';
   }
 
   // React.SyntheticEvent<HTMLInputElement>React.KeyboardEvent<HTMLInputElement>
@@ -98,10 +99,64 @@ export class TypingTestComponent extends React.Component<IProps, IState> {
   public render() {
     return (
       <div>
-        <WordsText textChunk={this.props.textChunk} textChunkId={this.props.textChunkId} currentWordIndex={this.state.wordCount} />
+        <WordsTextSFC
+          textChunk={this.props.textChunk}
+          textChunkId={this.props.textChunkId}
+          currentWordIndex={this.state.wordCount}
+        />
         <input id='typing' ref={this.userInput} onKeyUp={this.onKeyUp} />
         <span id='timer'>{this.state.timer}</span>
       </div>
     );
+  }
+}
+
+interface IWordsTextProps {
+  textChunk: string[];
+  textChunkId: number;
+  currentWordIndex: number;
+}
+
+export const WordsTextSFC: React.SFC<IWordsTextProps> = (props) => {
+  return (
+    <div id='words'>
+      {props.textChunk && renderWords(props)}
+    </div>
+  );
+}
+
+function renderWords(props: IWordsTextProps) {
+  return (
+    props.textChunk.map((row, index) => (
+      <WordSFC key={index} word={row} index={index} currentWordIndex={props.currentWordIndex}/>
+    )
+    )
+  );
+}
+
+interface IWordProps {
+  word: string;
+  index: number;
+  currentWordIndex: number;
+}
+
+export const WordSFC: React.SFC<IWordProps> = (props) => {
+  return (
+    <span>
+      <span className={'word' + addClassName(props.index, props.currentWordIndex)}>
+        {props.word}{'\u00a0'}
+      </span>
+      {' '}
+    </span>
+  );
+}
+
+function addClassName(index: number, current: number) {
+  if (index < current) {
+    return ' done';
+  } else if (index === current) {
+    return ' current';
+  } else {
+    return '';
   }
 }
